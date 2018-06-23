@@ -14,15 +14,23 @@ class Note extends React.Component{
   constructor(props) {
     super(props)
     this.dispatch = props.dispatch;
-    this.state = {
-      count: 0,
-    }
   }
 
   addNote = () => {
+    this.dispatch({ type: 'note/addNote' })
+  }
+
+  delNote = (id) => {
     this.dispatch({
-      type: 'note/addNote',
+      type: 'note/delNote',
+      payload: {
+        id
+      }
     })
+  }
+
+  delAllNote = () => {
+    this.dispatch({ type: 'note/delAllNote' })
   }
 
   mousedownHandler = (e) => {
@@ -33,7 +41,7 @@ class Note extends React.Component{
 
     if(e.target.className === 'noteTitle') {
       document.addEventListener('mousemove', this.mousemoveHandler, false);
-    } else if(e.target.className === 'note') {
+    } else if(e.target.className === 'drag') {
       document.addEventListener('mousemove', this.mousescaleHandler, false);
     }
   }
@@ -57,10 +65,17 @@ class Note extends React.Component{
     })
   }
 
+  getNote = () => {
+    this.dispatch({
+      type: 'note/getNote',
+    })
+  }
+
+
   componentDidMount() {
     document.addEventListener('mousedown', this.mousedownHandler, false)
     document.addEventListener('mouseup', this.mouseupHandler, false)
-    document.querySelector('#addNote').addEventListener('click', this.addNote ,false)
+    // document.querySelector('#addNote').addEventListener('click', this.addNote ,false)
   }
 
   render() {
@@ -70,14 +85,16 @@ class Note extends React.Component{
         <Item
           {...item}
           key={item.id}
+          delNote={this.delNote}
         />
       )
     })
 
     return(
       <div>
-        <input type="button" value="新增便利贴" id="addNote" className={styles.btn}/>
-        <input type="button" value="清除所有便利贴" id="removeAllNote" className={styles.btn}/>
+        <input type="button" value="新增便利贴" id="addNote" onClick={this.addNote} className={styles.btn}/>
+        <input type="button" value="清除所有便利贴" id="removeAllNote" onClick={this.delAllNote} className={styles.btn}/>
+        <input type="button" value="查看存储数据" id="getNote" onClick={this.getNote} className={styles.btn}/>
         <hr />
         {NoteItems}
       </div>

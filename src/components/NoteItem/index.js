@@ -12,10 +12,10 @@ const Item = (props) => {
   return(
     <div className="note" style={{...props}} id={props.id} zindex={props.zIndex}>
       <div className="noteTitle">
-        <img src={require("../../assets/plus.png")} className="addIcon" alt=""/>
-        <img src={require("../../assets/minus.png")} className="delIcon" alt=""/>
+        <button className='delIcon' onClick={() => props.delNote(props.id)}>×</button>
       </div>
-      <div className="noteContent" contentEditable={true}></div>
+      <div className="noteContent" contentEditable="true"></div>
+      <div className='drag'></div>
     </div>
   )
 }
