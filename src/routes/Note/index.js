@@ -25,7 +25,34 @@ class Note extends React.Component{
     })
   }
 
+  mousedownHandler = (e) => {
+    this.dispatch({
+      type: 'note/clickNote',
+      payload: e,
+    })
+
+    if(e.target.className === 'noteTitle') {
+      document.addEventListener('mousemove', this.mousemoveHandler, false);
+    }
+
+    // else if(e.target.className === 'note')
+    //   console.log('get note')
+  }
+
+  mouseupHandler = () => {
+    document.removeEventListener('mousemove', this.mousemoveHandler, false);
+  }
+
+  mousemoveHandler = (e) => {
+    this.dispatch({
+      type: 'note/dragNote',
+      payload: e
+    })
+  }
+
   componentDidMount() {
+    document.addEventListener('mousedown', this.mousedownHandler, false)
+    document.addEventListener('mouseup', this.mouseupHandler, false)
     document.querySelector('#addNote').addEventListener('click', this.addNote ,false)
   }
 
