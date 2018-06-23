@@ -33,14 +33,21 @@ class Note extends React.Component{
 
     if(e.target.className === 'noteTitle') {
       document.addEventListener('mousemove', this.mousemoveHandler, false);
+    } else if(e.target.className === 'note') {
+      document.addEventListener('mousemove', this.mousescaleHandler, false);
     }
-
-    // else if(e.target.className === 'note')
-    //   console.log('get note')
   }
 
   mouseupHandler = () => {
     document.removeEventListener('mousemove', this.mousemoveHandler, false);
+    document.removeEventListener('mousemove', this.mousescaleHandler, false);
+  }
+
+  mousescaleHandler = (e) => {
+    this.dispatch({
+      type: 'note/scaleNote',
+      payload: e
+    })
   }
 
   mousemoveHandler = (e) => {

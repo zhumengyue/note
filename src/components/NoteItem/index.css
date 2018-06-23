@@ -1,7 +1,8 @@
 :global(.note) {
   background-color: #6F9;
+  /*width: 180px;*/
+  /*height: 170px;*/
   box-shadow: 2px 5px 5px gray;
-  float: left;
   margin: 5px;
   position: absolute;
 }
@@ -13,11 +14,12 @@
 }
 
 :global(.noteContent) {
-  width: 90%;
+  width: 100%;
   padding: 0 5px 0 5px;
-  height: 80%;
+  min-height: 10%;
+  max-height: 80%;
   overflow: auto;
-  border: none
+  outline: none;
 }
 
 :global(.addIcon) {

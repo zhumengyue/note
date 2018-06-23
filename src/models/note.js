@@ -60,45 +60,52 @@ export default {
         let { dragObj, zIndex, relplace } = yield select(state=>state.note);
         let { _startX, _startY, _offsetX, _offsetY} = relplace;
         dragObj = payload.target.parentNode;
-        const id = dragObj.id;
-
-        const item = yield select(state=>state.note.noteItem)
-        const dragitem = item.filter(item=>item.id == id)
-
         zIndex += 1;
+        _startX = payload.clientX;
+        _startY = payload.clientY;
+        _offsetX = dragObj.offsetLeft;
+        _offsetY = dragObj.offsetTop;
+
+        relplace = { _startX, _startY, _offsetX, _offsetY };
+
+        yield put({ type: 'save', payload: { relplace, zIndex, dragObj }})
+      } else if (payload.target.className === 'note') {
+        let { dragObj, relplace } = yield select(state=>state.note);
+        let { _startX, _startY, _offsetX, _offsetY} = relplace;
+        dragObj = payload.target;
 
         _startX = payload.clientX;
         _startY = payload.clientY;
         _offsetX = dragObj.offsetLeft;
         _offsetY = dragObj.offsetTop;
 
-        relplace = {
-          _startX: _startX,
-          _startY: _startY,
-          _offsetX: _offsetX,
-          _offsetY: _offsetY,
-        }
-
-        yield put({ type: 'save', payload: {relplace,zIndex,dragObj}})
+        relplace = { _startX, _startY, _offsetX, _offsetY };
+        yield put({ type: 'save', payload: { relplace, dragObj }})
       }
 
     },
 
     *dragNote({ payload },{ call, put, select}) {
       //todo 拖拽便利贴
-      let { dragObj, zIndex, relplace, noteItem } = yield select(state=>state.note);
+      let { dragObj, zIndex, relplace } = yield select(state=>state.note);
       const { _startX, _startY, _offsetX, _offsetY} = relplace;
       if (dragObj) {
         dragObj.style.left = (_offsetX + payload.clientX - _startX - 5) + 'px';
         dragObj.style.top  = (_offsetY + payload.clientY - _startY - 5) + 'px';
         dragObj.style.zIndex = zIndex;
 
-        yield put({ type: 'save', payload: { noteItem }})
+        // yield put({ type: 'save', payload: { noteItem }})
       }
     },
 
     *scaleNote({ payload },{ call, put, select}) {
       //todo 缩放便利贴
+      let { dragObj, relplace, noteItem } = yield select(state=>state.note);
+      const { _startX, _startY, _offsetX, _offsetY} = relplace;
+      let item = noteItem.filter(item => item.id == dragObj.id)
+
+      dragObj.style.width = (item[0].width + payload.clientX - _startX) + 'px';
+      dragObj.style.height = (item[0].height + payload.clientY - _startY) + 'px';
 
     },
 
