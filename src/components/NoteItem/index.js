@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import './index.css'
+import ContentEditable from 'react-contenteditable';
 
 const Item = (props) => {
   return(
@@ -14,7 +15,11 @@ const Item = (props) => {
       <div className="noteTitle">
         <button className='delIcon' onClick={() => props.delNote(props.id)}>×</button>
       </div>
-      <div className="noteContent" contentEditable="true"></div>
+      <ContentEditable
+        html={props.content}
+        className='noteContent'
+        onBlur={()=>props.onblur(props.id)}
+      />
       <div className='drag'></div>
     </div>
   )

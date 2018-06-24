@@ -3,21 +3,11 @@ import {getNote} from '../services/note';
 export default {
 
   namespace: 'note',
-
   state: {
     // 便利贴信息
-    noteItem: [
-    //   {
-    //   id: new Date().getTime(),
-    //   content: '',
-    //   width: 180,
-    //   height: 170,
-    //   left: 0,
-    //   top: 50,
-    //   zIndex: 0,
-    // }
-    ],
+    noteItem: [],
 
+    // 当前item相对位置
     divLeft: 0,
     divTop: 50,
     zIndex: 0,
@@ -37,8 +27,8 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({pathname}) => {
-        // if(pathname === '/')
-          // dispatch({type: 'getNote'})
+        if(pathname === '/')
+          dispatch({type: 'loadData'})
       })
     },
   },
@@ -50,16 +40,30 @@ export default {
     },
     *addNote({ payload },{ call, put, select}) {
       let { divLeft, divTop } = yield select(state=>state.note);
+      let newItem;
 
-      const newItem = [{
-        id: new Date().getTime(),
-        content: '',
-        width: 180,
-        height: 170,
-        left: divLeft,
-        top: divTop,
-        zIndex: 0,
-      }];
+      if (payload) {
+        const { key, value } = payload;
+        newItem = [{
+          id: key,
+          content : value[0],
+          width   : parseInt(value[1]),
+          height  : parseInt(value[2]),
+          left    : parseInt(value[3]),
+          top     : parseInt(value[4]),
+          zIndex  : parseInt(value[5]),
+        }]
+      } else {
+        newItem = [{
+          id: new Date().getTime(),
+          content: '',
+          width: 180,
+          height: 170,
+          left: divLeft,
+          top: divTop,
+          zIndex: 0,
+        }];
+      }
 
       const preitem = yield select(state=>state.note.noteItem)
       const noteItem = preitem.concat(newItem)
@@ -69,7 +73,6 @@ export default {
         divTop += 200;
         divLeft = 0;
       }
-
       yield put({ type: 'save', payload: { noteItem, divLeft, divTop } })
     },
 
@@ -104,7 +107,6 @@ export default {
     *dragNote({ payload },{ call, put, select}) {
       let { dragObj, zIndex, relplace,noteItem } = yield select(state=>state.note);
       const { _startX, _startY, _offsetX, _offsetY} = relplace;
-
       noteItem.find((value) => {
         if (value.id == dragObj.id) {
           value.left = _offsetX + payload.clientX - _startX - 5;
@@ -113,30 +115,48 @@ export default {
         }
       })
 
-      yield put({ type: 'save', payload: { noteItem }})
-
+      yield put({ type: 'save', payload: { noteItem } })
     },
 
     *scaleNote({ payload },{ call, put, select}) {
       let { dragObj, relplace, noteItem, zIndex } = yield select(state=>state.note);
       const { _offsetX, _offsetY} = relplace;
-
-        noteItem.find((value,index,arr) => {
-          if (value.id == dragObj.id) {
-            value.width = payload.clientX - _offsetX;
-            value.height = payload.clientY - _offsetY;
-            value.zIndex = zIndex;
-          }
-        })
-
-        yield put({ type: 'save', payload: { noteItem } })
+      noteItem.find((value) => {
+        if (value.id == dragObj.id) {
+          value.width = payload.clientX - _offsetX +5;
+          value.height = payload.clientY - _offsetY +5;
+          value.zIndex = zIndex;
+        }
+      })
+      yield put({ type: 'save', payload: { noteItem } })
     },
 
     *delNote({ payload },{ call, put, select}) {
-      console.log(payload)
       let noteItem = yield select(state=>state.note.noteItem)
       noteItem = noteItem.filter(item => item.id != payload.id);
       yield put({ type: 'save', payload: { noteItem }})
+    },
+
+    *loadData({},{put}) {
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i),
+            value = localStorage.getItem(key).split('|&|');
+        yield put({ type: 'addNote', payload: { key, value }})
+      }
+    },
+
+    *saveNote({payload},{put,select}) {
+      const { id, content } = payload;
+      let noteItem = yield select(state => state.note.noteItem);
+      noteItem.find((value)=> {
+        if (value.id == id) {
+          value.content = content
+        }
+      })
+      let item = noteItem.filter(item => item.id == id)[0]
+      yield put({ type: 'save', payload: { noteItem }})
+      const value = (content ? content : item.content) + '|&|' + item.width + '|&|' + item.height + '|&|' + item.left + '|&|' + item.top + '|&|' + item.zIndex;
+      localStorage.setItem(id,value)
     },
 
     *delAllNote({},{put}) {

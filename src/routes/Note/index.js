@@ -21,16 +21,17 @@ class Note extends React.Component{
   }
 
   delNote = (id) => {
-    this.dispatch({
-      type: 'note/delNote',
-      payload: {
-        id
-      }
-    })
+    this.dispatch({ type: 'note/delNote', payload: { id } })
   }
 
   delAllNote = () => {
     this.dispatch({ type: 'note/delAllNote' })
+  }
+
+  onblurHandler = (id) => {
+    const content = document.getElementById(id).childNodes[1].innerText;
+    if (content)
+      this.dispatch({ type: 'note/saveNote', payload: { id, content } })
   }
 
   mousedownHandler = (e) => {
@@ -46,7 +47,12 @@ class Note extends React.Component{
     }
   }
 
-  mouseupHandler = () => {
+  mouseupHandler = (e) => {
+    let obj = e.target.parentNode;
+    if (obj.className === 'note') {
+      this.dispatch({ type: 'note/saveNote', payload: { id: obj.id, content: obj.childNodes[1].innerText } })
+    }
+
     document.removeEventListener('mousemove', this.mousemoveHandler, false);
     document.removeEventListener('mousemove', this.mousescaleHandler, false);
   }
@@ -65,27 +71,25 @@ class Note extends React.Component{
     })
   }
 
-  getNote = () => {
-    this.dispatch({
-      type: 'note/getNote',
-    })
-  }
-
-
   componentDidMount() {
     document.addEventListener('mousedown', this.mousedownHandler, false)
     document.addEventListener('mouseup', this.mouseupHandler, false)
-    // document.querySelector('#addNote').addEventListener('click', this.addNote ,false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.mousedownHandler, false)
+    document.removeEventListener('mouseup', this.mouseupHandler, false)
   }
 
   render() {
-    const { dispatch, note } = this.props;
+    const { note } = this.props;
     const NoteItems = note.noteItem.map(item => {
       return (
         <Item
           {...item}
           key={item.id}
           delNote={this.delNote}
+          onblur={this.onblurHandler}
         />
       )
     })
@@ -94,7 +98,6 @@ class Note extends React.Component{
       <div>
         <input type="button" value="新增便利贴" id="addNote" onClick={this.addNote} className={styles.btn}/>
         <input type="button" value="清除所有便利贴" id="removeAllNote" onClick={this.delAllNote} className={styles.btn}/>
-        <input type="button" value="查看存储数据" id="getNote" onClick={this.getNote} className={styles.btn}/>
         <hr />
         {NoteItems}
       </div>
