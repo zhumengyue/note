@@ -7,10 +7,11 @@
  */
 import React from 'react';
 import { connect } from 'dva';
-import styles from './index.css';
 import Item from '../../components/NoteItem';
+import styles from './index.css';
 
 class Note extends React.Component{
+
   constructor(props) {
     super(props)
     this.dispatch = props.dispatch;
@@ -28,8 +29,12 @@ class Note extends React.Component{
     this.dispatch({ type: 'note/delAllNote' })
   }
 
+  onfocusHandler = (id) => {
+    this.dispatch({ type: 'note/onfocus', payload: { id }})
+  }
+
   onblurHandler = (id) => {
-    const content = document.getElementById(id).childNodes[1].innerText;
+    const content = document.getElementById(id).childNodes[1].innerHTML;
     if (content) this.dispatch({ type: 'note/saveNote', payload: { id, content } })
   }
 
@@ -38,6 +43,7 @@ class Note extends React.Component{
       type: 'note/clickNote',
       payload: e,
     })
+    e.stopPropagation();
 
     if(e.target.className === 'noteTitle') {
       document.addEventListener('mousemove', this.mousemoveHandler, false);
@@ -48,8 +54,8 @@ class Note extends React.Component{
 
   mouseupHandler = (e) => {
     let obj = e.target.parentNode;
-    if (obj.className === 'note' && obj.childNodes[1].innerText)
-      this.dispatch({ type: 'note/saveNote', payload: { id: obj.id, content: obj.childNodes[1].innerText } })
+    if (obj.className === 'note' && obj.childNodes[1].innerHTML)
+      this.dispatch({ type: 'note/saveNote', payload: { id: obj.id, content: obj.childNodes[1].innerHTML } })
 
     document.removeEventListener('mousemove', this.mousemoveHandler, false);
     document.removeEventListener('mousemove', this.mousescaleHandler, false);
@@ -70,8 +76,8 @@ class Note extends React.Component{
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.mousedownHandler, false)
-    document.addEventListener('mouseup', this.mouseupHandler, false)
+    document.addEventListener('mousedown', this.mousedownHandler, false);
+    document.addEventListener('mouseup', this.mouseupHandler, false);
   }
 
   componentWillUnmount() {
@@ -88,6 +94,7 @@ class Note extends React.Component{
           key={item.id}
           delNote={this.delNote}
           onblur={this.onblurHandler}
+          onfocus={this.onfocusHandler}
         />
       )
     })

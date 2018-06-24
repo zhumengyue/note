@@ -19,6 +19,7 @@ const Item = (props) => {
         html={props.content}
         className='noteContent'
         onBlur={()=>props.onblur(props.id)}
+        onFocus={()=>props.onfocus(props.id)}
       />
       <div className='drag'></div>
     </div>

@@ -13,20 +13,12 @@
 
 :global(.noteContent) {
   width: 100%;
-  padding: 0 5px 0 5px;
-  bottom: 10px;
+  padding: 5px;
+  bottom: 0px;
   top: 25px;
   overflow: auto;
   position: absolute;
   outline: none;
-}
-
-:global(.addIcon) {
-  display: block;
-  float: left;
-  padding: 2px 0 0 2px;
-  width: 18px;
-  height: 18px;
 }
 
 :global(.delIcon) {
@@ -44,20 +36,20 @@
   width: 20px;
 }
 
-/*:global(body .note:nth-child(even)) {*/
-    /*-webkit-transform: rotate(2deg);*/
-    /*-moz-transform: rotate(2deg);*/
-    /*-o-transform: rotate(2deg);*/
-    /*-ms-transform: rotate(2deg);*/
-    /*transform: rotate(2deg);*/
-/*}*/
-/*:global(body .note:nth-child(odd)) {*/
-    /*-webkit-transform: rotate(-1deg);*/
-    /*-moz-transform: rotate(-1deg);*/
-    /*-o-transform: rotate(-1deg);*/
-    /*-ms-transform: rotate(-1deg);*/
-    /*transform: rotate(-1deg);*/
-/*}*/
+:global(body .note:nth-child(even)) {
+    -webkit-transform: rotate(1deg);
+    -moz-transform: rotate(1deg);
+    -o-transform: rotate(1deg);
+    -ms-transform: rotate(1deg);
+    transform: rotate(1deg);
+}
+:global(body .note:nth-child(odd)) {
+    -webkit-transform: rotate(-1deg);
+    -moz-transform: rotate(-1deg);
+    -o-transform: rotate(-1deg);
+    -ms-transform: rotate(-1deg);
+    transform: rotate(-1deg);
+}
 /*:global(body .note:nth-child(3n)) {*/
     /*-webkit-transform: rotate(1deg);*/
     /*-moz-transform: rotate(1deg);*/
@@ -65,15 +57,15 @@
     /*-ms-transform: rotate(1deg);*/
     /*transform: rotate(1deg);*/
 /*}*/
-/*:global(body .note:hover) {*/
-    /*-webkit-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);*/
-    /*-moz-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);*/
-    /*-o-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);*/
-    /*-webkit-transform: rotate(0deg);*/
-    /*-moz-transform: rotate(0deg);*/
-    /*-o-transform: rotate(0deg);*/
-    /*-ms-transform: rotate(0deg);*/
-    /*transform: rotate(0deg);*/
-    /*z-index: 10;*/
-    /*background-color: #6C6;*/
-/*}*/
+:global(body .note:hover) {
+    -webkit-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
+    -o-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    z-index: 10;
+    background-color: #6C6;
+}
