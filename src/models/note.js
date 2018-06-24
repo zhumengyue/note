@@ -135,6 +135,7 @@ export default {
       let noteItem = yield select(state=>state.note.noteItem)
       noteItem = noteItem.filter(item => item.id != payload.id);
       yield put({ type: 'save', payload: { noteItem }})
+      localStorage.removeItem(payload.id)
     },
 
     *loadData({},{put}) {
@@ -155,7 +156,11 @@ export default {
       })
       let item = noteItem.filter(item => item.id == id)[0]
       yield put({ type: 'save', payload: { noteItem }})
-      const value = (content ? content : item.content) + '|&|' + item.width + '|&|' + item.height + '|&|' + item.left + '|&|' + item.top + '|&|' + item.zIndex;
+      let value;
+      if (content ? content : item.content) {
+        console.log('yes')
+        value = (content ? content : item.content) + '|&|' + item.width + '|&|' + item.height + '|&|' + item.left + '|&|' + item.top + '|&|' + item.zIndex;
+      }
       localStorage.setItem(id,value)
     },
 
@@ -163,17 +168,19 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          noteItem: [] ,
-          divLeft: 0,
-          divTop: 50,
-          zIndex: 0,
+          noteItem : [],
+          divLeft  : 0,
+          divTop   : 50,
+          zIndex   : 0,
           relplace: {
             _startX  : 0,
             _startY  : 0,
             _offsetX : 0,
             _offsetY : 0
           },
-        }})
+        }
+      })
+      localStorage.clear();
     },
   },
 

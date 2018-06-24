@@ -30,8 +30,7 @@ class Note extends React.Component{
 
   onblurHandler = (id) => {
     const content = document.getElementById(id).childNodes[1].innerText;
-    if (content)
-      this.dispatch({ type: 'note/saveNote', payload: { id, content } })
+    if (content) this.dispatch({ type: 'note/saveNote', payload: { id, content } })
   }
 
   mousedownHandler = (e) => {
@@ -49,9 +48,8 @@ class Note extends React.Component{
 
   mouseupHandler = (e) => {
     let obj = e.target.parentNode;
-    if (obj.className === 'note') {
+    if (obj.className === 'note' && obj.childNodes[1].innerText)
       this.dispatch({ type: 'note/saveNote', payload: { id: obj.id, content: obj.childNodes[1].innerText } })
-    }
 
     document.removeEventListener('mousemove', this.mousemoveHandler, false);
     document.removeEventListener('mousemove', this.mousescaleHandler, false);
