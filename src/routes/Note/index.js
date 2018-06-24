@@ -54,9 +54,8 @@ class Note extends React.Component{
 
   mouseupHandler = (e) => {
     let obj = e.target.parentNode;
-    if (obj.className === 'note' && obj.childNodes[1].innerHTML)
+    if (obj.className === 'note' && obj.childNodes[1].innerHTML != '\<br\>')
       this.dispatch({ type: 'note/saveNote', payload: { id: obj.id, content: obj.childNodes[1].innerHTML } })
-
     document.removeEventListener('mousemove', this.mousemoveHandler, false);
     document.removeEventListener('mousemove', this.mousescaleHandler, false);
   }

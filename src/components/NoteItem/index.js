@@ -13,7 +13,7 @@ const Item = (props) => {
   return(
     <div className="note" style={{...props}} id={props.id} zindex={props.zIndex}>
       <div className="noteTitle">
-        <button className='delIcon' onClick={() => props.delNote(props.id)}>×</button>
+        <button className='delBtn' onClick={() => props.delNote(props.id)}>×</button>
       </div>
       <ContentEditable
         html={props.content}

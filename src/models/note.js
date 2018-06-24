@@ -154,8 +154,11 @@ export default {
     *loadData({ },{ put }) {
       for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i),
-          value = localStorage.getItem(key).split('|&|');
-        yield put({ type: 'addNote', payload: { key, value }});
+          value = localStorage.getItem(key);
+        if( value == 'undefined')
+          localStorage.removeItem(key)
+        else
+          yield put({ type: 'addNote', payload: { key, value }});
       }
     },
 
